@@ -4,4 +4,4 @@ metadata:
   name: api-config
 data:
   COUNTER_API_URL: http://traffic-counter-api:9000
-  MEME_API_URL: http://meme-content-api:9100
+  MEME_API_URL: http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/mock-slack
