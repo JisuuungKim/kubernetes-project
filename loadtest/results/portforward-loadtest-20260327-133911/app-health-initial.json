@@ -1,0 +1,1 @@
+{"status":"ready","service":"traffic-app","counter_service":{"status":"ok","service":"traffic-counter-api","http_status":200},"meme_service":{"status":"ok","service":"meme-content-api","http_status":200}}

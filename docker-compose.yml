@@ -1,0 +1,41 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: traffic-app-redis
+    command: ["sh", "-c", "redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\""]
+    environment:
+      REDIS_PASSWORD: change-me-redis-password
+    ports:
+      - "6379:6379"
+
+  traffic-app:
+    build: .
+    container_name: traffic-app
+    environment:
+      COUNTER_API_URL: http://traffic-counter-api:9000
+      MEME_API_URL: http://meme-content-api:9100
+    ports:
+      - "8000:8000"
+    depends_on:
+      - traffic-counter-api
+      - meme-content-api
+
+  traffic-counter-api:
+    build: .
+    container_name: traffic-counter-api
+    command: ["uvicorn", "counter_service.main:app", "--host", "0.0.0.0", "--port", "9000"]
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: change-me-redis-password
+    ports:
+      - "9000:9000"
+    depends_on:
+      - redis
+
+  meme-content-api:
+    build: .
+    container_name: meme-content-api
+    command: ["uvicorn", "meme_content_api.main:app", "--host", "0.0.0.0", "--port", "9100"]
+    ports:
+      - "9100:9100"

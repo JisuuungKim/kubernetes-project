@@ -1,0 +1,26 @@
+{
+  "config": {
+    "url": "http://127.0.0.1:8000/notice",
+    "concurrency": 10,
+    "duration_seconds": 15,
+    "timeout_seconds": 10.0,
+    "think_time_seconds": 0.0
+  },
+  "totals": {
+    "total_requests": 5776,
+    "success_count": 5776,
+    "failure_count": 0,
+    "success_rate": 100.0,
+    "rps": 385.06666666666666
+  },
+  "status_codes": {
+    "200": 5776
+  },
+  "errors": [],
+  "latency_ms": {
+    "avg": 25.89711042711219,
+    "p50": 18.743208000000067,
+    "p95": 56.94495900000085,
+    "max": 122.72245799999992
+  }
+}

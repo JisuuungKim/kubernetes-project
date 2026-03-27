@@ -1,0 +1,111 @@
+== Start port-forward to traffic-app service ==
+== Initial state ==
+NAME          REFERENCE                TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+traffic-app   Deployment/traffic-app   cpu: 4%/50%   2         10        2          44m
+NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+traffic-app-c569cdf9b-bglp5   1/1     Running   0          39m   10.244.0.27   minikube   <none>           <none>
+traffic-app-c569cdf9b-ff5lf   1/1     Running   0          39m   10.244.0.25   minikube   <none>           <none>
+NAME                                   CPU(cores)   MEMORY(bytes)   
+https-app-596d946964-hnts9             1m           12Mi            
+meme-content-api-5dfb746f94-cbx7q      3m           35Mi            
+meme-content-api-5dfb746f94-vxjqg      3m           34Mi            
+order-deploy-9c9d47557-mnxxx           1m           26Mi            
+pay-deploy-8457784bf5-mlggm            1m           23Mi            
+redis                                  7m           9Mi             
+redis-admin-b9ddfb446-jvmmj            1m           105Mi           
+traffic-app-c569cdf9b-bglp5            4m           40Mi            
+traffic-app-c569cdf9b-ff5lf            3m           42Mi            
+traffic-counter-api-5646bcb9b5-fpqs9   3m           38Mi            
+traffic-counter-api-5646bcb9b5-pgj6c   3m           37Mi            
+== Run load test in background ==
+== Sampling HPA and pod state every 5s ==
+[2026-03-27 13:39:13] hpa(current:desired:cpu)=2:2:4 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:39:18] hpa(current:desired:cpu)=2:2:3 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:39:23] hpa(current:desired:cpu)=2:2:3 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+== Final load test summary ==
+
+Load Test Summary
+Total requests: 5776
+Success: 5776
+Failure: 0
+Success rate: 100.00%
+RPS: 385.07
+Status codes: {200: 5776}
+Latency avg: 25.90 ms
+Latency p50: 18.74 ms
+Latency p95: 56.94 ms
+Latency max: 122.72 ms
+== Final HPA ==
+NAME          REFERENCE                TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+traffic-app   Deployment/traffic-app   cpu: 3%/50%   2         10        2          45m
+== Final pod usage ==
+NAME                                   CPU(cores)   MEMORY(bytes)   
+https-app-596d946964-hnts9             1m           12Mi            
+meme-content-api-5dfb746f94-cbx7q      3m           35Mi            
+meme-content-api-5dfb746f94-vxjqg      3m           34Mi            
+order-deploy-9c9d47557-mnxxx           1m           26Mi            
+pay-deploy-8457784bf5-mlggm            1m           23Mi            
+redis                                  7m           9Mi             
+redis-admin-b9ddfb446-jvmmj            1m           105Mi           
+traffic-app-c569cdf9b-bglp5            4m           40Mi            
+traffic-app-c569cdf9b-ff5lf            3m           42Mi            
+traffic-counter-api-5646bcb9b5-fpqs9   3m           38Mi            
+traffic-counter-api-5646bcb9b5-pgj6c   3m           37Mi            
+== Final traffic-app pods ==
+NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+traffic-app-c569cdf9b-bglp5   1/1     Running   0          39m   10.244.0.27   minikube   <none>           <none>
+traffic-app-c569cdf9b-ff5lf   1/1     Running   0          39m   10.244.0.25   minikube   <none>           <none>
+== Render report ==
+# Load Test Report
+
+## Test Configuration
+- URL: `http://127.0.0.1:8000/notice`
+- Concurrency: `10`
+- Duration: `15s`
+- Think time: `0.0s`
+
+## Request Result
+- Total requests: `5776`
+- Success: `5776`
+- Failure: `0`
+- Success rate: `100.00%`
+- RPS: `385.07`
+- Latency avg/p95/max: `25.90 / 56.94 / 122.72 ms`
+- Status codes: `{'200': 5776}`
+
+## HPA and Pods
+- Initial replicas: `2`
+- Max current replicas: `2`
+- Max desired replicas: `2`
+- Max CPU utilization: `4%`
+- Max observed traffic-app pod count: `2`
+- Max observed traffic-counter-api pod count: `2`
+- Max observed meme-content-api pod count: `2`
+
+## Resource Peaks
+- traffic-app CPU/Memory peak per pod: `4m / 42.0Mi`
+- traffic-counter-api CPU/Memory peak per pod: `3m / 38.0Mi`
+- meme-content-api CPU/Memory peak per pod: `3m / 35.0Mi`
+
+## Service Health
+- traffic-app readiness after test: `ready`
+- counter service status: `ok`
+- meme service status: `ok`
+- Counter hits before/after: `78856 -> 84632`
+
+## Findings
+- 성공률이 100.00%로 안정적입니다.
+- 최대 CPU 사용률이 4%라 HPA 임계치 50%를 넘지 않았습니다.
+- Redis 카운터는 테스트 동안 5776건 증가했습니다.
+
+## Artifacts
+- Raw load summary: `python-loadtest-summary.json`
+- HPA samples: `hpa-samples.tsv`
+- Pod samples: `pod-samples.tsv`
+- Resource samples: `top-samples.tsv`
+- traffic-app logs: `traffic-app.logs`
+- traffic-counter-api logs: `traffic-counter-api.logs`
+- meme-content-api logs: `meme-content-api.logs`
+
+
+Report written to: loadtest/results/portforward-loadtest-20260327-133911/summary.md

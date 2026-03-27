@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meme-content-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: meme-content-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: meme-content-api
+    spec:
+      containers:
+        - name: meme-content-api
+          image: traffic-app:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - uvicorn
+            - meme_content_api.main:app
+            - --host
+            - 0.0.0.0
+            - --port
+            - "9100"
+          ports:
+            - containerPort: 9100
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9100
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9100
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"

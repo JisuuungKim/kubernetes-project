@@ -1,0 +1,95 @@
+== Start port-forward to traffic-app service ==
+== Initial state ==
+NAME          REFERENCE                TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+traffic-app   Deployment/traffic-app   cpu: 4%/50%   2         10        2          33m
+NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE       NOMINATED NODE   READINESS GATES
+traffic-app-c569cdf9b-bglp5   1/1     Running   0          27m   10.244.0.27   minikube   <none>           <none>
+traffic-app-c569cdf9b-ff5lf   1/1     Running   0          27m   10.244.0.25   minikube   <none>           <none>
+NAME                                   CPU(cores)   MEMORY(bytes)   
+https-app-596d946964-hnts9             1m           12Mi            
+meme-content-api-5dfb746f94-cbx7q      3m           35Mi            
+meme-content-api-5dfb746f94-vxjqg      3m           34Mi            
+order-deploy-9c9d47557-mnxxx           1m           26Mi            
+pay-deploy-8457784bf5-mlggm            1m           23Mi            
+redis                                  10m          9Mi             
+redis-admin-b9ddfb446-jvmmj            1m           105Mi           
+traffic-app-c569cdf9b-bglp5            4m           40Mi            
+traffic-app-c569cdf9b-ff5lf            4m           40Mi            
+traffic-counter-api-5646bcb9b5-fpqs9   4m           38Mi            
+traffic-counter-api-5646bcb9b5-pgj6c   3m           37Mi            
+== Run load test in background ==
+== Sampling HPA and pod state every 5s ==
+[2026-03-27 13:27:30] hpa(current:desired:cpu)=2:2:4 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:27:35] hpa(current:desired:cpu)=2:2:4 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:27:40] hpa(current:desired:cpu)=2:2:4 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:27:45] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:27:50] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:27:55] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:01] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:06] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:11] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:16] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:21] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:26] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:31] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:36] hpa(current:desired:cpu)=2:2:6 deploy=2/2 pods=traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running 
+[2026-03-27 13:28:42] hpa(current:desired:cpu)=2:4:109 deploy=2/4 pods=traffic-app-c569cdf9b-bcdg5:0/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-m7p7p:0/1:Running 
+[2026-03-27 13:28:47] hpa(current:desired:cpu)=2:4:109 deploy=2/4 pods=traffic-app-c569cdf9b-bcdg5:0/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-m7p7p:0/1:Running 
+[2026-03-27 13:28:52] hpa(current:desired:cpu)=2:4:109 deploy=2/4 pods=traffic-app-c569cdf9b-bcdg5:0/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-m7p7p:0/1:Running 
+[2026-03-27 13:28:57] hpa(current:desired:cpu)=4:5:109 deploy=4/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:0/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:02] hpa(current:desired:cpu)=4:5:109 deploy=4/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:0/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:07] hpa(current:desired:cpu)=4:5:109 deploy=4/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:0/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:12] hpa(current:desired:cpu)=5:5:109 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:17] hpa(current:desired:cpu)=5:5:109 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:23] hpa(current:desired:cpu)=5:5:109 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:28] hpa(current:desired:cpu)=5:5:109 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:33] hpa(current:desired:cpu)=5:5:109 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:38] hpa(current:desired:cpu)=5:5:109 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:43] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:48] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:53] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:29:59] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:30:04] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:30:09] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:30:14] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:30:19] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:30:24] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+[2026-03-27 13:30:30] hpa(current:desired:cpu)=5:5:111 deploy=5/5 pods=traffic-app-c569cdf9b-bcdg5:1/1:Running traffic-app-c569cdf9b-bglp5:1/1:Running traffic-app-c569cdf9b-ff5lf:1/1:Running traffic-app-c569cdf9b-j8bp8:1/1:Running traffic-app-c569cdf9b-m7p7p:1/1:Running 
+== Final load test summary ==
+
+Load Test Summary
+Total requests: 25018
+Success: 25018
+Failure: 0
+RPS: 138.99
+Status codes: {200: 25018}
+Latency avg: 1440.86 ms
+Latency p50: 1378.96 ms
+Latency p95: 1866.74 ms
+Latency max: 2938.03 ms
+== Final HPA ==
+NAME          REFERENCE                TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+traffic-app   Deployment/traffic-app   cpu: 111%/50%   2         10        5          36m
+== Final pod usage ==
+NAME                                   CPU(cores)   MEMORY(bytes)   
+https-app-596d946964-hnts9             1m           12Mi            
+meme-content-api-5dfb746f94-cbx7q      14m          35Mi            
+meme-content-api-5dfb746f94-vxjqg      20m          34Mi            
+order-deploy-9c9d47557-mnxxx           1m           26Mi            
+pay-deploy-8457784bf5-mlggm            1m           23Mi            
+redis                                  14m          9Mi             
+redis-admin-b9ddfb446-jvmmj            1m           105Mi           
+traffic-app-c569cdf9b-bcdg5            3m           38Mi            
+traffic-app-c569cdf9b-bglp5            3m           40Mi            
+traffic-app-c569cdf9b-ff5lf            229m         43Mi            
+traffic-app-c569cdf9b-j8bp8            3m           37Mi            
+traffic-app-c569cdf9b-m7p7p            3m           37Mi            
+traffic-counter-api-5646bcb9b5-fpqs9   26m          38Mi            
+traffic-counter-api-5646bcb9b5-pgj6c   32m          37Mi            
+== Final traffic-app pods ==
+NAME                          READY   STATUS    RESTARTS   AGE    IP            NODE       NOMINATED NODE   READINESS GATES
+traffic-app-c569cdf9b-bcdg5   1/1     Running   0          115s   10.244.0.31   minikube   <none>           <none>
+traffic-app-c569cdf9b-bglp5   1/1     Running   0          30m    10.244.0.27   minikube   <none>           <none>
+traffic-app-c569cdf9b-ff5lf   1/1     Running   0          30m    10.244.0.25   minikube   <none>           <none>
+traffic-app-c569cdf9b-j8bp8   1/1     Running   0          100s   10.244.0.33   minikube   <none>           <none>
+traffic-app-c569cdf9b-m7p7p   1/1     Running   0          115s   10.244.0.32   minikube   <none>           <none>

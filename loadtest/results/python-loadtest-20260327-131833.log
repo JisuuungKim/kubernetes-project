@@ -1,0 +1,11 @@
+
+Load Test Summary
+Total requests: 25584
+Success: 25584
+Failure: 0
+RPS: 213.20
+Status codes: {200: 25584}
+Latency avg: 469.55 ms
+Latency p50: 439.71 ms
+Latency p95: 681.75 ms
+Latency max: 1631.60 ms

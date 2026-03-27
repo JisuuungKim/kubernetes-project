@@ -1,0 +1,25 @@
+timestamp	service	pod	cpu	memory
+2026-03-27 13:39:12	traffic-app	traffic-app-c569cdf9b-bglp5	4m	40Mi
+2026-03-27 13:39:12	traffic-app	traffic-app-c569cdf9b-ff5lf	3m	42Mi
+2026-03-27 13:39:12	traffic-counter-api	traffic-counter-api-5646bcb9b5-fpqs9	3m	38Mi
+2026-03-27 13:39:12	traffic-counter-api	traffic-counter-api-5646bcb9b5-pgj6c	3m	37Mi
+2026-03-27 13:39:12	meme-content-api	meme-content-api-5dfb746f94-cbx7q	3m	35Mi
+2026-03-27 13:39:12	meme-content-api	meme-content-api-5dfb746f94-vxjqg	3m	34Mi
+2026-03-27 13:39:13	traffic-app	traffic-app-c569cdf9b-bglp5	4m	40Mi
+2026-03-27 13:39:13	traffic-app	traffic-app-c569cdf9b-ff5lf	3m	42Mi
+2026-03-27 13:39:13	traffic-counter-api	traffic-counter-api-5646bcb9b5-fpqs9	3m	38Mi
+2026-03-27 13:39:13	traffic-counter-api	traffic-counter-api-5646bcb9b5-pgj6c	3m	37Mi
+2026-03-27 13:39:13	meme-content-api	meme-content-api-5dfb746f94-cbx7q	3m	35Mi
+2026-03-27 13:39:13	meme-content-api	meme-content-api-5dfb746f94-vxjqg	3m	34Mi
+2026-03-27 13:39:18	traffic-app	traffic-app-c569cdf9b-bglp5	4m	40Mi
+2026-03-27 13:39:18	traffic-app	traffic-app-c569cdf9b-ff5lf	3m	42Mi
+2026-03-27 13:39:18	traffic-counter-api	traffic-counter-api-5646bcb9b5-fpqs9	3m	38Mi
+2026-03-27 13:39:18	traffic-counter-api	traffic-counter-api-5646bcb9b5-pgj6c	3m	37Mi
+2026-03-27 13:39:18	meme-content-api	meme-content-api-5dfb746f94-cbx7q	3m	35Mi
+2026-03-27 13:39:18	meme-content-api	meme-content-api-5dfb746f94-vxjqg	3m	34Mi
+2026-03-27 13:39:23	traffic-app	traffic-app-c569cdf9b-bglp5	4m	40Mi
+2026-03-27 13:39:23	traffic-app	traffic-app-c569cdf9b-ff5lf	3m	42Mi
+2026-03-27 13:39:23	traffic-counter-api	traffic-counter-api-5646bcb9b5-fpqs9	3m	38Mi
+2026-03-27 13:39:23	traffic-counter-api	traffic-counter-api-5646bcb9b5-pgj6c	3m	37Mi
+2026-03-27 13:39:23	meme-content-api	meme-content-api-5dfb746f94-cbx7q	3m	35Mi
+2026-03-27 13:39:23	meme-content-api	meme-content-api-5dfb746f94-vxjqg	3m	34Mi

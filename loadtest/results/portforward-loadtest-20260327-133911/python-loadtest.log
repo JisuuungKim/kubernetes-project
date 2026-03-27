@@ -1,0 +1,12 @@
+
+Load Test Summary
+Total requests: 5776
+Success: 5776
+Failure: 0
+Success rate: 100.00%
+RPS: 385.07
+Status codes: {200: 5776}
+Latency avg: 25.90 ms
+Latency p50: 18.74 ms
+Latency p95: 56.94 ms
+Latency max: 122.72 ms
