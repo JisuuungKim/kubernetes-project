@@ -136,21 +136,63 @@ async def call_service_health(client: httpx.AsyncClient, base_url: str) -> dict[
     return payload
 
 
+def build_notice_response(
+    *,
+    message: str,
+    counter_result: dict[str, Any] | None = None,
+    meme_result: dict[str, Any] | None = None,
+    flow: str,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "service": "traffic-app",
+        "flow": flow,
+        "message": message,
+        "requested_at": isoformat(utc_now()),
+    }
+    if counter_result is not None:
+        payload["counter"] = counter_result
+    if meme_result is not None:
+        payload["notice"] = meme_result.get("meme")
+        payload["meme_source"] = meme_result
+    return payload
+
+
 @app.get("/notice")
 async def get_notice(request: Request) -> dict[str, Any]:
     client = get_http_client(request)
-    counter_result, meme_result = await asyncio.gather(
-        call_counter_hit(client),
-        call_meme_content(client),
+    counter_result = await call_counter_hit(client)
+    meme_result = await call_meme_content(client)
+
+    return build_notice_response(
+        message="notice delivered successfully",
+        counter_result=counter_result,
+        meme_result=meme_result,
+        flow="counter_then_meme",
     )
 
-    return {
-        "service": "traffic-app",
-        "message": "notice delivered successfully",
-        "notice": meme_result.get("meme"),
-        "counter": counter_result,
-        "requested_at": isoformat(utc_now()),
-    }
+
+@app.get("/notice/message")
+async def get_notice_message(request: Request) -> dict[str, Any]:
+    client = get_http_client(request)
+    meme_result = await call_meme_content(client)
+
+    return build_notice_response(
+        message="meme notice fetched successfully",
+        meme_result=meme_result,
+        flow="meme_only",
+    )
+
+
+@app.get("/notice/track")
+async def track_notice_request(request: Request) -> dict[str, Any]:
+    client = get_http_client(request)
+    counter_result = await call_counter_hit(client)
+
+    return build_notice_response(
+        message="notice traffic recorded successfully",
+        counter_result=counter_result,
+        flow="counter_only",
+    )
 
 
 @app.get("/stats")

@@ -5,6 +5,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 
 def parse_args() -> argparse.Namespace:
@@ -112,6 +113,15 @@ def extract_counter_hits(stats_payload: dict[str, Any]) -> int:
     return int(stats_payload.get("counter_stats", {}).get("total_hits", 0))
 
 
+def expected_counter_hits_for_url(url: str, success_count: int) -> int:
+    path = urlparse(url).path
+    if path in ("/notice", "/notice/track"):
+        return success_count
+    if path == "/notice/message":
+        return 0
+    return success_count
+
+
 def render_report(run_dir: Path) -> str:
     load_summary = read_json(run_dir / "python-loadtest-summary.json")
     initial_stats = read_json(run_dir / "app-stats-initial.json")
@@ -142,6 +152,8 @@ def render_report(run_dir: Path) -> str:
 
     findings: list[str] = []
     success_rate = float(totals.get("success_rate", 0.0))
+    success_count = int(totals.get("success_count", 0))
+    expected_hit_delta = expected_counter_hits_for_url(config.get("url", ""), success_count)
     if success_rate < 99.0:
         findings.append(f"- 성공률이 {success_rate:.2f}%라서 에러 원인 점검이 필요합니다.")
     else:
@@ -160,9 +172,16 @@ def render_report(run_dir: Path) -> str:
             f"- 최대 CPU 사용률이 {max_cpu_utilization}%라 HPA 임계치 50%를 넘지 않았습니다."
         )
 
-    if hit_delta < int(totals.get("success_count", 0)):
+    if expected_hit_delta == 0:
+        if hit_delta == 0:
+            findings.append("- 현재 테스트 경로는 counter를 호출하지 않으므로 Redis 카운터가 증가하지 않는 것이 정상입니다.")
+        else:
+            findings.append(
+                f"- 현재 테스트 경로는 counter를 호출하지 않아야 하는데 Redis 카운터가 {hit_delta}건 증가했습니다. 요청 경로 분리를 다시 확인해야 합니다."
+            )
+    elif hit_delta < expected_hit_delta:
         findings.append(
-            "- 카운터 증가량이 성공 응답 수보다 적습니다. `/hit` 호출 실패나 중복 제외 여부를 확인해야 합니다."
+            f"- Redis 카운터가 기대치보다 적게 증가했습니다. 기대 `{expected_hit_delta}`건, 실제 `{hit_delta}`건입니다."
         )
     else:
         findings.append(f"- Redis 카운터는 테스트 동안 {hit_delta}건 증가했습니다.")
@@ -212,6 +231,7 @@ def render_report(run_dir: Path) -> str:
         f"- counter service status: `{counter_ready}`",
         f"- meme service status: `{meme_ready}`",
         f"- Counter hits before/after: `{initial_hits} -> {final_hits}`",
+        f"- Expected counter hit delta: `{expected_hit_delta}`",
         "",
         "## Findings",
         *findings,

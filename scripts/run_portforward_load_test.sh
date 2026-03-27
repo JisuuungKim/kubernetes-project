@@ -3,7 +3,7 @@ set -euo pipefail
 
 NAMESPACE="${NAMESPACE:-default}"
 LOCAL_PORT="${LOCAL_PORT:-8000}"
-TARGET_URL="${TARGET_URL:-http://127.0.0.1:${LOCAL_PORT}/notice}"
+TEST_TARGET="${TEST_TARGET:-full}"
 CONCURRENCY="${CONCURRENCY:-100}"
 DURATION="${DURATION:-120}"
 THINK_TIME="${THINK_TIME:-0.0}"
@@ -22,6 +22,25 @@ TOP_SAMPLE_FILE="${RUN_DIR}/top-samples.tsv"
 mkdir -p "${RUN_DIR}"
 
 pf_pid=""
+
+case "${TEST_TARGET}" in
+  full)
+    TARGET_PATH="/notice"
+    ;;
+  counter)
+    TARGET_PATH="/notice/track"
+    ;;
+  meme)
+    TARGET_PATH="/notice/message"
+    ;;
+  *)
+    echo "Unsupported TEST_TARGET: ${TEST_TARGET}" >&2
+    echo "Use one of: full, counter, meme" >&2
+    exit 1
+    ;;
+esac
+
+TARGET_URL="http://127.0.0.1:${LOCAL_PORT}${TARGET_PATH}"
 
 cleanup() {
   if [[ -n "${pf_pid}" ]] && kill -0 "${pf_pid}" >/dev/null 2>&1; then
@@ -42,6 +61,17 @@ capture_http_snapshot() {
   local path="$1"
   local output="$2"
   curl -fsS "http://127.0.0.1:${LOCAL_PORT}${path}" > "${RUN_DIR}/${output}" || true
+}
+
+preflight_target() {
+  local status
+  status="$(curl -sS -o "${RUN_DIR}/target-preflight-response.txt" -w "%{http_code}" "${TARGET_URL}" || true)"
+  if [[ "${status}" != "200" ]]; then
+    echo "Target endpoint preflight failed: ${TARGET_URL} returned HTTP ${status}" | tee -a "${RESULT_FILE}"
+    echo "This usually means the running traffic-app image does not include the requested endpoint yet." | tee -a "${RESULT_FILE}"
+    echo "Rebuild and redeploy traffic-app, then retry." | tee -a "${RESULT_FILE}"
+    exit 1
+  fi
 }
 
 sample_state() {
@@ -80,6 +110,8 @@ if ! curl -fsS "http://127.0.0.1:${LOCAL_PORT}/health" >/dev/null 2>&1; then
   exit 1
 fi
 
+preflight_target
+
 printf "timestamp\tcurrent_replicas\tdesired_replicas\tcpu_utilization\n" > "${HPA_SAMPLE_FILE}"
 printf "timestamp\tservice\tpod\tready\tstatus\trestarts\n" > "${POD_SAMPLE_FILE}"
 printf "timestamp\tservice\tpod\tcpu\tmemory\n" > "${TOP_SAMPLE_FILE}"
@@ -97,6 +129,7 @@ kubectl top pods -n "${NAMESPACE}" | tee -a "${RESULT_FILE}" || true
 sample_state
 
 echo "== Run load test in background ==" | tee -a "${RESULT_FILE}"
+echo "Target mode: ${TEST_TARGET} (${TARGET_URL})" | tee -a "${RESULT_FILE}"
 python3 loadtest/python_load_test.py \
   --url "${TARGET_URL}" \
   --concurrency "${CONCURRENCY}" \
